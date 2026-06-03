@@ -53,6 +53,23 @@ pip install uv
 # if you use Homebrew on mac you can do
 brew install uv
 ```
+
+## Instructions for Dylan: ![Alt text]( https://tse1.mm.bing.net/th/id/OIP.xkcb-rjeUApIv2b3GG1KiQHaHa?rs=1&pid=ImgDetMain&o=7&rm=3)
+
+1. install python https://www.python.org/downloads/
+2. install uv https://docs.astral.sh/uv/getting-started/installation/#standalone-installer
+3. download routler-0.1.0-py3-none-any.whl
+ from https://github.com/MadroneGoldman/TheRoutler/releases/tag/DylanRelease
+ 4. open a terminal where you downladed the wheel and run routler like this:
+ ```sh
+uvx routler-0.1.0-py3-none-any.whl <command>
+
+### commands are one of these
+ question-one
+ question-two
+ question-three <first_stop> <second_stop>
+ ```
+ *****
 ### Run or install tool from Python wheel (.whl)
 
 1. Run tool from the wheel without explicitly installing into a persistent environment or adding it to our system's PATH.
