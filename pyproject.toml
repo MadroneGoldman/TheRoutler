@@ -1,0 +1,33 @@
+[project]
+name = "routler"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "aiohttp>=3.13.5",
+    "asyncio>=4.0.0",
+    "click>=8.4.1",
+    "logging>=0.4.9.6",
+    "pandas>=3.0.3",
+    "tenacity>=9.1.4",
+    "typing>=3.10.0.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.3",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests", "routler"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+
+[project.scripts]
+routler = "routler.cli:main"
+
+[build-system]
+requires = ["uv_build>=0.11.17,<0.12.0"]
+build-backend = "uv_build"
