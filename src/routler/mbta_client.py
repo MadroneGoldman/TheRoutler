@@ -14,6 +14,7 @@ from tenacity import (
 
 logger = logging.getLogger(__name__)
 
+
 class MBTAClient:
     """Client for interacting with the MBTA V3 API."""
 

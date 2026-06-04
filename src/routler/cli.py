@@ -1,5 +1,6 @@
 import click
 import asyncio
+from rapidfuzz import process
 import pandas as pd
 
 from .subway_services import get_subway_routes, get_routes_and_stops, bfs_shortest_path
@@ -73,7 +74,9 @@ def question_two() -> None:
 
 @cli.command(
     short_help="Finds route between two stops",
-    epilog="\b\b\bExample:\tuv run routler question-three Ashmont Arlington",
+    epilog="\b\b\bExample:\nuv run routler question-three Ashmont Arlington" \
+    "\n\nstops names that are multiple words with spaces should be surrounded by quotes:" \
+    "\n\nuv run routler question-three Ashmont \"Science Park/West End\"",
 )
 @click.argument("first_stop")
 @click.argument("second_stop")
@@ -82,7 +85,24 @@ def question_three(first_stop: str, second_stop: str) -> None:
 
     subway_df = asyncio.run(get_routes_and_stops())
 
-    # Use a breadth first search to find a path from the sirst stop to thw second
+    # Run a fuzzy search on input stops and raise an error if no existing stops match 
+    fuzz_cutoff_score = 65
+    if first_stop not in subway_df.index:
+        start_best_match = process.extractOne(first_stop, subway_df.index, score_cutoff=fuzz_cutoff_score)
+        if start_best_match:
+            click.echo(f"best match for input: {first_stop} is {start_best_match[0]}\n")
+            first_stop = start_best_match[0]
+        else:
+            raise ValueError(f"Starting stop '{first_stop}' not found")
+    if second_stop not in subway_df.index:
+        goal_best_match = process.extractOne(second_stop, subway_df.index, score_cutoff=fuzz_cutoff_score)
+        if goal_best_match:
+            click.echo(f"best match for input: {second_stop} is {goal_best_match[0]}\n")
+            second_stop = goal_best_match[0]
+        else:
+            raise ValueError(f"Ending stop '{second_stop}' not found")
+    
+    # Use a breadth first search to find a path from the sirst stop to the second
     path = bfs_shortest_path(subway_df, first_stop, second_stop)
 
     click.echo(
@@ -94,7 +114,14 @@ def main() -> None:
     """Main CLI entry point."""
     try:
         cli()
-    # TODO:: different behaviors for exception types
+
+    # this is a question-three specific error because it's the only command with arguments
+    except click.UsageError as e:
+        click.echo(
+            "Usage: routler question-three [OPTIONS] FIRST_STOP SECOND_STOP"
+            "\nTry 'routler question-three --help' for help."
+        )
+        click.echo(f"Error: {e}", err=True)
     except (ValueError, RuntimeError, ConnectionError) as e:
         click.echo(f"Error: {e}", err=True)
 
