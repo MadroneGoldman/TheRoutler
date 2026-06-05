@@ -25,13 +25,12 @@ jobs:
         run: uv sync --locked --all-extras --dev
 
       - name: Run tests
-        # For example, using `pytest`
         run: uv run pytest -v
  
   build-and-release:
     needs: uv-test
     runs-on: ubuntu-latest
-    #if: startsWith(github.ref, 'refs/tags/') # Only run on tag pushes
+    if: startsWith(github.ref, 'refs/tags/') # Only run on tag pushes
     steps:
       - uses: actions/checkout@v6
 
@@ -46,6 +45,8 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
           files: dist/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
