@@ -1,5 +1,9 @@
 name: TestAndRelease
 
+on:
+  push:
+    branches:
+      - main  
 jobs:
   uv-test:
     name: python
