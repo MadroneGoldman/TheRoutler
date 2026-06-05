@@ -1,11 +1,13 @@
 import click
 import asyncio
+from dotenv import load_dotenv
 from rapidfuzz import process
 import pandas as pd
 
 from .subway_services import get_subway_routes, get_routes_and_stops, bfs_shortest_path
 from .ANSI_formating import format_route_names
 
+load_dotenv()
 ascii_title = r"""
  _____ _              __             _   _           
 /__   \ |__   ___    /__\ ___  _   _| |_| | ___ _ __ 
@@ -40,7 +42,6 @@ def cli():
 
 
 @cli.command(
-    cls=RoutlerHelpGroup,
     short_help="List subway routes",
     epilog="\b\b\bExample:\tuv run routler question-one",
 )
@@ -54,7 +55,6 @@ def question_one() -> None:
 
 
 @cli.command(
-    cls=RoutlerHelpGroup,
     short_help="Get routes with most/least stops",
     epilog="\b\b\bExample:\tuv run routler question-two",
 )
@@ -93,7 +93,6 @@ def question_two() -> None:
 
 
 @cli.command(
-    cls=RoutlerHelpGroup,
     short_help="Finds route between two stops",
     epilog="\b\b\bExample:\nuv run routler question-three Ashmont Arlington"
     "\n\nstops names that are multiple words with spaces should be surrounded by quotes:"
@@ -139,7 +138,6 @@ def main() -> None:
     """Main CLI entry point."""
     try:
         cli()
-
     # this is a question-three specific error because it's the only command with arguments
     except click.UsageError as e:
         click.echo(
