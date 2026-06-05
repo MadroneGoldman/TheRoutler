@@ -3,7 +3,13 @@ name: TestAndRelease
 on:
   push:
     branches:
+      - main 
+    tags:
+      - 'v*'
+  pull_request:
+    branches:
       - main  
+     
 jobs:
   uv-test:
     name: python
